@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My First Last Photography</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b6b6b;
+            --bg-primary: #fafaf9;
+            --bg-overlay: rgba(0, 0, 0, 0.92);
+            --border: #e8e6e3;
+            --accent: #8b7355;
+            --focus: #8b7355;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            line-height: 1.6;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.02) 2px, rgba(0,0,0,.02) 4px);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.3;
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(250, 250, 249, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem 2.5rem;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .site-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .site-title:hover {
+            color: var(--accent);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after,
+        nav a:focus::after {
+            width: 100%;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            color: var(--accent);
+            outline: none;
+        }
+
+        nav a:focus-visible {
+            outline: 2px solid var(--focus);
+            outline-offset: 6px;
+            border-radius: 2px;
+        }
+
+        /* Hero Section */
+        .hero {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2.5rem 4rem;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            font-weight: 300;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2.5rem 5rem;
+        }
+
+        section {
+            margin-bottom: 8rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        section:nth-child(2) { animation-delay: 0.1s; }
+        section:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+        }
+
+        .section-divider {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, var(--border), transparent);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            background: #f5f5f5;
+            cursor: pointer;
+            border-radius: 2px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInItem 0.6s ease forwards;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:nth-child(1) { animation-delay: 0.05s; }
+        .gallery-item:nth-child(2) { animation-delay: 0.1s; }
+        .gallery-item:nth-child(3) { animation-delay: 0.15s; }
+        .gallery-item:nth-child(4) { animation-delay: 0.2s; }
+        .gallery-item:nth-child(5) { animation-delay: 0.25s; }
+        .gallery-item:nth-child(6) { animation-delay: 0.3s; }
+        .gallery-item:nth-child(7) { animation-delay: 0.35s; }
+        .gallery-item:nth-child(8) { animation-delay: 0.4s; }
+        .gallery-item:nth-child(9) { animation-delay: 0.45s; }
+
+        @keyframes fadeInItem {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px var(--shadow);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.08);
+        }
+
+        .gallery-item:focus {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+        }
+
+        .gallery-item:focus-visible {
+            outline: 3px solid var(--focus);
+            outline-offset: 3px;
+        }
+
+        /* Metadata Overlay */
+        .metadata-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%);
+            color: white;
+            padding: 2rem 1.25rem 1.25rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .gallery-item:hover .metadata-overlay,
+        .gallery-item:focus .metadata-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .metadata-overlay p {
+            font-size: 0.8125rem;
+            margin-bottom: 0.25rem;
+            opacity: 0.95;
+            font-weight: 300;
+            letter-spacing: 0.3px;
+        }
+
+        /* Lightbox Modal */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-overlay);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .lightbox-image-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 2px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-metadata {
+            background: rgba(250, 250, 249, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 8px;
+            min-width: 280px;
+            max-width: 320px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-metadata h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+        }
+
+        .lightbox-metadata p {
+            font-size: 0.9375rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .lightbox-metadata p:last-child {
+            border-bottom: none;
+        }
+
+        .lightbox-metadata p strong {
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-right: 1rem;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lightbox-metadata p span {
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+
+        /* Navigation Controls */
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(250, 250, 249, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .lightbox-close:hover,
+        .lightbox-close:focus {
+            background: white;
+            transform: rotate(90deg);
+            border-color: var(--accent);
+        }
+
+        .lightbox-close:focus-visible {
+            outline: 2px solid var(--focus);
+            outline-offset: 3px;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(250, 250, 249, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 115, 85, 0.2);
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .lightbox-nav:hover,
+        .lightbox-nav:focus {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+            border-color: var(--accent);
+        }
+
+        .lightbox-nav:focus-visible {
+            outline: 2px solid var(--focus);
+            outline-offset: 3px;
+        }
+
+        .lightbox-nav.prev {
+            left: 2rem;
+        }
+
+        .lightbox-nav.next {
+            right: 2rem;
+        }
+
+        /* About & Contact Sections */
+        .about-content,
+        .contact-content {
+            max-width: 700px;
+        }
+
+        .about-content p,
+        .contact-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .contact-content a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 400;
+        }
+
+        .contact-content a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        /* Lazy loading placeholder */
+        img[data-src] {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1.5rem;
+            }
+
+            .site-title {
+                font-size: 1.25rem;
+            }
+
+            nav ul {
+                gap: 1.5rem;
+            }
+
+            nav a {
+                font-size: 0.8125rem;
+            }
+
+            .hero {
+                padding: 4rem 1.5rem 3rem;
+            }
+
+            .hero h2 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            main {
+                padding: 0 1.5rem 3rem;
+            }
+
+            .section-header h1 {
+                font-size: 2.25rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 2rem;
+            }
+
+            .lightbox-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                max-width: 95vw;
+            }
+
+            .lightbox-metadata {
+                width: 90%;
+                max-width: none;
+            }
+
+            .lightbox-nav {
+                width: 48px;
+                height: 48px;
+            }
+
+            .lightbox-close {
+                top: 1rem;
+                right: 1rem;
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metadata-overlay {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="site-title">My First Last Photography</div>
+            <nav>
+                <ul>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h2>Capturing Moments,<br>Telling Stories</h2>
+        <p>A curated collection of landscapes and scenes that speak to the beauty of our natural world</p>
+    </div>
+
+    <main>
+        <section id="gallery">
+            <div class="section-header">
+                <h1>Gallery</h1>
+                <div class="section-divider"></div>
+            </div>
+            <div class="gallery-grid" id="galleryGrid"></div>
+        </section>
+
+        <section id="about">
+            <div class="section-header">
+                <h1>About</h1>
+                <div class="section-divider"></div>
+            </div>
+            <div class="about-content">
+                <p>Welcome to my photography portfolio. I specialize in capturing moments that tell stories through light, composition, and emotion.</p>
+                <p>With over a decade of experience in landscape, portrait, and street photography, I strive to create images that resonate with viewers and stand the test of time.</p>
+                <p>Each photograph is a deliberate exploration of perspective, an invitation to see the world through a different lens.</p>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="section-header">
+                <h1>Contact</h1>
+                <div class="section-divider"></div>
+            </div>
+            <div class="contact-content">
+                <p>For inquiries, collaborations, or print purchases:</p>
+                <p>Email: <a href="mailto:hello@myfirstlast.photo">hello@myfirstlast.photo</a></p>
+                <p>Instagram: <a href="https://instagram.com/myfirstlast" target="_blank" rel="noopener">@myfirstlast</a></p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image lightbox">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Close lightbox">&times;</button>
+        <button class="lightbox-nav prev" id="prevBtn" aria-label="Previous image">&lsaquo;</button>
+        <div class="lightbox-content">
+            <div class="lightbox-image-container">
+                <img class="lightbox-image" id="lightboxImage" src="" alt="">
+            </div>
+            <div class="lightbox-metadata" id="lightboxMetadata"></div>
+        </div>
+        <button class="lightbox-nav next" id="nextBtn" aria-label="Next image">&rsaquo;</button>
+    </div>
+
+    <script>
+        // Photo data with metadata
+        const photos = [
+            {
+                src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800',
+                alt: 'Mountain landscape at sunset',
+                camera: 'Canon EOS R5',
+                lens: 'RF 24-70mm f/2.8',
+                iso: '100',
+                aperture: 'f/8',
+                shutter: '1/250s',
+                date: 'Oct 15, 2024',
+                location: 'Rocky Mountains, CO'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800',
+                alt: 'Forest path with morning fog',
+                camera: 'Sony A7R IV',
+                lens: 'FE 16-35mm f/2.8',
+                iso: '400',
+                aperture: 'f/4',
+                shutter: '1/125s',
+                date: 'Sep 22, 2024',
+                location: 'Pacific Northwest'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800',
+                alt: 'Coastal sunset with dramatic clouds',
+                camera: 'Nikon Z9',
+                lens: 'Z 24-120mm f/4',
+                iso: '200',
+                aperture: 'f/11',
+                shutter: '1/60s',
+                date: 'Aug 8, 2024',
+                location: 'Big Sur, CA'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1511593358241-7eea1f3c84e5?w=800',
+                alt: 'Desert landscape with sand dunes',
+                camera: 'Canon EOS R5',
+                lens: 'RF 70-200mm f/2.8',
+                iso: '160',
+                aperture: 'f/5.6',
+                shutter: '1/320s',
+                date: 'Jul 12, 2024',
+                location: 'Death Valley, CA'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800',
+                alt: 'Snow-capped mountain peaks',
+                camera: 'Sony A7R IV',
+                lens: 'FE 70-200mm f/2.8',
+                iso: '100',
+                aperture: 'f/8',
+                shutter: '1/500s',
+                date: 'Dec 3, 2024',
+                location: 'Swiss Alps'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800',
+                alt: 'Lake reflection at dawn',
+                camera: 'Nikon Z9',
+                lens: 'Z 14-30mm f/4',
+                iso: '64',
+                aperture: 'f/11',
+                shutter: '2s',
+                date: 'Nov 18, 2024',
+                location: 'Lake Tahoe, NV'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=800',
+                alt: 'Autumn forest from above',
+                camera: 'Canon EOS R5',
+                lens: 'RF 24-70mm f/2.8',
+                iso: '250',
+                aperture: 'f/5.6',
+                shutter: '1/200s',
+                date: 'Oct 28, 2024',
+                location: 'Vermont'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800',
+                alt: 'Rolling hills at golden hour',
+                camera: 'Sony A7R IV',
+                lens: 'FE 24-70mm f/2.8',
+                iso: '320',
+                aperture: 'f/4',
+                shutter: '1/160s',
+                date: 'Sep 5, 2024',
+                location: 'Tuscany, Italy'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800',
+                alt: 'Waterfall in lush forest',
+                camera: 'Nikon Z9',
+                lens: 'Z 24-70mm f/2.8',
+                iso: '400',
+                aperture: 'f/16',
+                shutter: '1/4s',
+                date: 'Aug 20, 2024',
+                location: 'Iceland'
+            }
+        ];
+
+        // State
+        let currentPhotoIndex = 0;
+
+        // Lazy loading intersection observer
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    observer.unobserve(img);
+                }
+            });
+        }, {
+            rootMargin: '50px'
+        });
+
+        // Render gallery
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            
+            photos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.setAttribute('tabindex', '0');
+                item.setAttribute('role', 'button');
+                item.setAttribute('aria-label', `View ${photo.alt}`);
+                
+                item.innerHTML = `
+                    <img data-src="${photo.src}" alt="${photo.alt}">
+                    <div class="metadata-overlay">
+                        <p>${photo.camera} · ${photo.lens}</p>
+                        <p>${photo.aperture} · ${photo.shutter} · ISO ${photo.iso}</p>
+                        <p>${photo.location}</p>
+                    </div>
+                `;
+                
+                // Click handler
+                item.addEventListener('click', () => openLightbox(index));
+                
+                // Keyboard handler
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openLightbox(index);
+                    }
+                });
+                
+                grid.appendChild(item);
+                
+                // Observe image for lazy loading
+                const img = item.querySelector('img');
+                imageObserver.observe(img);
+            });
+        }
+
+        // Lightbox functions
+        function openLightbox(index) {
+            currentPhotoIndex = index;
+            const photo = photos[index];
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImage = document.getElementById('lightboxImage');
+            const lightboxMetadata = document.getElementById('lightboxMetadata');
+            
+            // Fade out current image
+            lightboxImage.style.opacity = '0';
+            
+            setTimeout(() => {
+                lightboxImage.src = photo.src;
+                lightboxImage.alt = photo.alt;
+                lightboxImage.style.opacity = '1';
+            }, 150);
+            
+            lightboxMetadata.innerHTML = `
+                <h3>Details</h3>
+                <p><strong>Camera</strong><span>${photo.camera}</span></p>
+                <p><strong>Lens</strong><span>${photo.lens}</span></p>
+                <p><strong>Aperture</strong><span>${photo.aperture}</span></p>
+                <p><strong>Shutter</strong><span>${photo.shutter}</span></p>
+                <p><strong>ISO</strong><span>${photo.iso}</span></p>
+                <p><strong>Date</strong><span>${photo.date}</span></p>
+                <p><strong>Location</strong><span>${photo.location}</span></p>
+            `;
+            
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Focus close button for accessibility
+            document.getElementById('lightboxClose').focus();
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function nextPhoto() {
+            currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+            openLightbox(currentPhotoIndex);
+        }
+
+        function prevPhoto() {
+            currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+            openLightbox(currentPhotoIndex);
+        }
+
+        // Event listeners
+        document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+        document.getElementById('nextBtn').addEventListener('click', nextPhoto);
+        document.getElementById('prevBtn').addEventListener('click', prevPhoto);
+
+        // Click outside to close
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target.id === 'lightbox') {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const lightbox = document.getElementById('lightbox');
+            if (!lightbox.classList.contains('active')) return;
+            
+            switch(e.key) {
+                case 'Escape':
+                    closeLightbox();
+                    break;
+                case 'ArrowRight':
+                    nextPhoto();
+                    break;
+                case 'ArrowLeft':
+                    prevPhoto();
+                    break;
+            }
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Initialize
+        renderGallery();
+    </script>
+</body>
+</html>
